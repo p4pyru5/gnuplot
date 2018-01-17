@@ -1,0 +1,218 @@
+#---------------------------------------------------------------------------------------#
+#                     ____             ____  _       _                                  #
+#                    / ___|_ __  _   _|  _ \| | ___ | |_                                #
+#                   | |  _| '_ \| | | | |_) | |/ _ \| __|                               #
+#                   | |_| | | | | |_| |  __/| | (_) | |_                                #
+#                    \____|_| |_|\__,_|_|   |_|\___/ \__|                               #
+#                                                                                       #
+#  Template GnuPlot file for use with LaTeX                                             #
+#  (as conforming as possible to standard DIN 461:1973-03)                              #
+#  use over terminal with:                                                              #
+#  | cat NameOfThisFile.gpl | gnuplot -persist                                          #
+#                                                                                       #
+#  Example usage in LaTeX:                                                              #
+#  | \begin{figure}                                                                     #
+#  |     \centering                                                                     #
+#  |     \resizebox{\linewidth}{!}{ \input{YourPlot.tex} }                              #
+#  |     \caption{Place your caption here}                                              #
+#  |     \label{your:label}                                                             #
+#  | \end{figure}                                                                       #
+#                                                                                       #
+# NOTE:                                                                                 #
+#  GnuPlot will produce the .tex-file containing following line near end:               #
+#  | \put(0,0){\includegraphics{Plot3LNPC}}%                                            #
+#  If you have your plots in some other path than the root path of your LaTeX document  #
+#  (where the file is located, which contains \documentclass{...}), you MUST adjust     #
+#  the line in the GnuPlot output tex-file!                                             #
+#                                                                                       #
+#  Use something like this as script:                                                   #
+#  | #!/bin/bash                                                                        #
+#  | # NAME has to be the basename of this file (without extension)                     #
+#  | NAME=NameOfThisFile                                                                #
+#  | # RELPATH is the relative path of this file to the LaTeX document root             #
+#  | RELPATH="./myplots/measurements/"                                                  #
+#  | sed -i "s!\\includegraphics{$NAME}!\\includegraphics{$RELPATH$NAME}!g" $NAME.tex   #
+#                                                                                       #
+#---------------------------------------------------------------------------------------#
+
+
+
+reset;
+set terminal cairolatex eps rounded dashlength 2.0 size 15cm,8.5cm;
+set output "PlotA.tex";
+
+#set terminal epscairo enhanced rounded size 15cm,8.5cm; # colortext transparent rounded dashlength 2.0 fontscale 1.0 size 19cm,11cm:
+#set output "Plot3LNPC.eps";
+
+
+
+#------------  Predefine some colors  -----------------------------------------
+COLOR_blueviolet  = "#8A2BE2"
+COLOR_crimson     = "#DC143C"
+COLOR_darkblue    = "#0000008B"
+COLOR_darkgreen   = "#006400"
+COLOR_darkmagenta = "#8B008B"
+COLOR_darkorange  = "#FF8C00"
+COLOR_darkred     = "#8B0000"
+
+COLOR0 = "black"
+COLOR1 = "red"
+COLOR2 = "blue"
+COLOR3 = COLOR_darkgreen
+COLOR4 = COLOR_darkred
+COLOR5 = COLOR_darkorange
+COLOR6 = COLOR_darkmagenta
+
+
+#------------  Define positions for axis labels and arrows  -------------------
+XARROWLENGTH = 0.06 ;  # of graph
+XARROWEND    = 1.00 ;  # graph
+XARROWSTART  = XARROWEND-XARROWLENGTH ; 
+XARROWY      = 0.02 ;  # at screen
+X2ARROWY     = 0.96 ;  # at screen
+XLABELOFFSET = 0.01 ;  # graphn
+XARROWPOS    = "from graph XARROWSTART, screen XARROWY to graph XARROWEND, screen XARROWY"
+XLABELPOS    = "at graph XARROWSTART-XLABELOFFSET, screen XARROWY-0.003 right"
+X2ARROWPOS   = "from graph XARROWSTART, screen X2ARROWY to graph XARROWEND, screen X2ARROWY"
+X2LABELPOS   = "at graph XARROWSTART-XLABELOFFSET, screen X2ARROWY right"
+
+YARROWLENGTH = 0.10 ;  # of graph
+YARROWEND    = 1.00 ;  # graph
+YARROWSTART  = YARROWEND-YARROWLENGTH ; 
+YARROWX      = 0.015 ;  # screen
+Y2ARROWX     = 0.985 ;  # graph
+YLABELOFFSET = 0.015 ;  # graph
+YARROWPOS    = "from screen YARROWX, graph YARROWSTART to screen YARROWX, graph YARROWEND"
+YLABELPOS    = "at screen YARROWX+0.002, graph YARROWSTART-YLABELOFFSET rotate by 90 right"
+Y2ARROWPOS   = "from screen Y2ARROWX, graph YARROWSTART to screen Y2ARROWX, graph YARROWEND"
+Y2LABELPOS   = "at screen Y2ARROWX+0.003, graph YARROWSTART-YLABELOFFSET rotate by 90 right"
+
+
+#------------  Some basic configuration  --------------------------------------
+set macros				# enable macros (@Name)
+set encoding utf8		# Encoding setzen, wichtig für Umlaute
+set decimal locale		# als Dezimaltrenner ein Kommata benutzen -> auch bei messwerten, NICHT hier bei gnuPlot, also bei Angabe der Bereiche
+set angles degrees		# von RAD nach DEG	
+set samples 100000		# set number of iterations for plotting range
+
+#------------  Define margins  ------------------------------------------------
+set tmargin at screen 0.99   # top margin position (not width)
+set bmargin at screen 0.11   # bottom margin position (not width)
+set lmargin at screen 0.09   # left margin position (not width)
+set rmargin at screen 0.99   # right margin position (not width)
+
+
+#------------------- Alles für die X1-Achse  ----------------------------------
+set label 1 '\(x\)' @XLABELPOS
+set arrow @XARROWPOS head filled lw 1.5
+
+#------------------- Alles für die Y1-Achse  ----------------------------------
+set label 2 '\(y\)' @YLABELPOS
+set arrow @YARROWPOS head filled lw 1.5
+
+#------------------- Alles für die X2-Achse  ----------------------------------
+#set tmargin at screen 0.9
+#set label 3 '\(X_2\)' @X2LABELPOS
+#set arrow @X2ARROWPOS head filled lw 1.5
+
+#------------------- Alles für die Y2-Achse  ----------------------------------
+#set rmargin at screen 0.92
+#set label 4 '\(P\) in W' @Y2LABELPOS
+#set arrow @Y2ARROWPOS head filled lw 1.5
+
+
+
+# ---------------  Basic Plot Settings  ---------------------------------------
+# (no)mirror: (do not) mirror tics to opposite graph border
+# in/out: inside or outside
+set tics nomirror in
+
+# border for plot area in linewidth 3
+# border sides are binary encoded: 1=bottom, 2=left, 4=top, 8=right
+set border 1+2+4+8 lw 3
+
+#------------------------
+#### Grid
+set grid xtics ytics mxtics mytics
+# Grid Settings
+set grid lw 2 lt 1 dt 1 lc rgb "black", lw 1 lt 1 dt 1 lc rgb "black"
+
+
+#------------------------
+#### Format of axis labels
+# Format       Explanation
+# %f           floating point notation
+# %e or %E     exponential notation ;  an "e" or "E" before the power
+# %g or %G     the shorter of %e (or %E) and %f
+# %x or %X     hex
+# %o or %O     octal
+# %t           mantissa to base 10
+# %l           mantissa to base of current logscale
+# %s           mantissa to base of current logscale ;  scientific power
+# %T           power to base 10
+# %L           power to base of current logscale
+# %S           scientific power
+# %c           character replacement for scientific power
+# %b           mantissa of ISO/IEC 80000 notation (ki, Mi, Gi, Ti, Pi, Ei, Zi, Yi) 
+# %B           prefix of ISO/IEC 80000 notation (ki, Mi, Gi, Ti, Pi, Ei, Zi, Yi) 
+# %P           multiple of pi
+
+#set format y "%.1f"			# für Fließkommazahlen, 1 nachkommastelle
+
+#------------------------
+#### Configuration of legend/key
+#set key {on|off} {default}
+#          {{inside | outside} | {lmargin | rmargin | tmargin | bmargin}
+#               | {at <position>}}
+#             {left | right | center} {top | bottom | center}
+#             {vertical | horizontal} {Left | Right}
+#            {{no}opaque}
+#             {{no}reverse} {{no}invert}
+#             {samplen <sample_length>} {spacing <vertical_spacing>}
+#             {width <width_increment>} {height <height_increment>}
+#             {{no}autotitle {columnheader}}
+#             {title "<text>"} {{no}enhanced}
+#             {font "<face>,<size>"} {textcolor <colorspec>}
+#             {{no}box {linestyle <style> | linetype <type> | linewidth <width>}}
+#             {maxcols {<max no. of columns> | auto}}
+#             {maxrows {<max no. of rows> | auto}}
+set key inside right bottom Left maxrows 3 spacing 2 width -1.5 opaque reverse
+# or without a legend
+#unset key
+
+
+# -----------------  Plot Specific Settings  ----------------------------------
+# Einstellung (Achsen, etc. )
+set xrange [0:10]
+set yrange [0:15]
+#set y2range [0:100]
+#set x2range [0:40]
+
+# Tics an Achsen von,Schrittweite,bis out=Außenseite
+#set xtics 0,0.5,5
+#set ytics 0,1,10
+#set y2tics 0,10,100
+
+# set number of subdeivisions of one x/ytic (called minor tics)
+# -> 2 subdivisions will produce one minor tic
+set mxtics 2
+set mytics 2 
+#set my2tics 2
+
+
+# Input file contains fields separated by either ; or \t (TAB)
+#set datafile separator ";\t"
+
+#-----------------------------------------------------------------------
+# lt linetype, lw linewidth, lc linecolor, dt dashtype {1,2,...},"..","-.",...
+# pt pointtype, ps pointsize
+# title "lala" or notitle
+# for multiple lines: ,\  at end of line without more trailing characters!
+# For Single points ie:  "< echo 16,8 0,613" with points ...
+# Conversion from point (.) to comma (,) in datafile: "< tr . , < dataFile.txt"
+# Calculations: ($1+15):($2*1.4142) plot (column 2 * 1.4142) over (column 1 + 15)
+set multiplot
+	plot \
+	x with lines lw 3 lc rgb COLOR1 title 'Hello Plot'
+unset multiplot
+

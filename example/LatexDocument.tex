@@ -1,0 +1,32 @@
+
+\documentclass[	paper=a4, 				% 
+				fontsize=11pt, 			% 
+				english, 				% 
+				captions=oneline,		% 
+				captions=tableheading,	% 
+				numbers=noenddot,		% 
+				]{scrartcl}
+
+\usepackage{babel}
+\usepackage{blindtext}
+
+% Needed for gnuplot plot file
+\usepackage{color}
+\usepackage{graphicx}
+
+\begin{document}
+
+
+\blindtext
+
+\begin{figure}[htb]
+	\centering
+	\resizebox{\linewidth}{!}{ \input{./myPlots/MeasurementA/PlotA.tex} }
+	\caption{Place your caption here}
+	\label{your:label}
+\end{figure}
+
+\blindtext
+\blindtext
+
+\end{document}
